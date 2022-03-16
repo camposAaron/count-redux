@@ -1,4 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { AppStore } from 'src/app/app.reducers';
+import { reset } from '../contador.actions';
 
 @Component({
   selector: 'app-nieto',
@@ -8,18 +12,16 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class NietoComponent implements OnInit {
 
-  @Input() contador:number;
-  @Output() contadorCambio = new EventEmitter<number>();
-  constructor() {
-    this.contador = 0;
-   }
+  contador$ ?: Observable<number>;
+  
+  constructor(private store:Store<AppStore>) {}
 
   ngOnInit(): void {
+    this.contador$ = this.store.select("count");   
   }
 
   reset(){
-    this.contador = 0;
-    this.contadorCambio.emit(0);
+    this.store.dispatch(reset());
   }
 
 }
